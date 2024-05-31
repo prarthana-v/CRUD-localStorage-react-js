@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import './style.css'
 
 const CRUD = () => {
 
@@ -9,6 +10,7 @@ const CRUD = () => {
   const [edit, setEdit] = useState("");
   const [single, setSingle] = useState("");
   const [mdelete, setMdelete] = useState([]);
+  const [mstatus, setmStatus] = useState([]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -87,7 +89,7 @@ const CRUD = () => {
     setMdelete(checkedId);
   }
 
-  console.log(mdelete);
+  // console.log(mdelete);
 
   const multipleDelete = () => {
 
@@ -104,35 +106,53 @@ const CRUD = () => {
     }
   }
 
+  const handleChangeStatus = (id, checked) => {
+    const changeStatus = [...mstatus];
+
+    if (checked) {
+      changeStatus.push(id);
+    }
+    else {
+      changeStatus = changeStatus.filter(val => val != id);
+    }
+    setmStatus(changeStatus);
+  }
   return (
     <div align="center" onSubmit={handleSubmit}>
-      <form action="">
-        <h1>ADD user</h1>
-        Name:-
-        <input type="text" placeholder='Name..' onChange={(e) => setName(e.target.value)} value={name || ""} />
+      <form action="" >
+        <h1 className='py-2 bg-dark text-white mb-5'>Form</h1>
+        <span className='fw-bold pe-3'>Name:-</span>
+        <input className='ps-2 py-1 w-25' type="text" placeholder='Name..' onChange={(e) => setName(e.target.value)} value={name || ""} />
         <br /><br />
-        Phone :-
-        <input type="text" placeholder='phone no..' onChange={(e) => SetPhone(e.target.value)} value={phone || ""} />
+
+        <span className='fw-bold pe-3'>
+          Phone :-
+        </span>
+        <input type="text" className='ps-2 py-1 w-25' placeholder='Phone no..' onChange={(e) => SetPhone(e.target.value)} value={phone || ""} />
         <br /><br />
         {
           edit ? (
-            <input type="submit" value="Edit" />
+            <input className='btn btn-light' type="submit" value="Edit" />
           ) : (
-            <input type="submit" />
+            <input className='btn btn-light' type="submit" />
           )
         }
       </form>
+
       <br />
       {/* view record in table */}
-      <table border={1} cellPadding={3} cellSpacing={1}>
+      <table className='table  table-secondary table-striped table-border' border={1} cellPadding={3} cellSpacing={1}>
         <thead><tr>
-          <th>Id</th>
-          <th>Name</th>
-          <th>Phone</th>
-          <th>Status</th>
-          <th>Action</th>
-          <th style={{ width: 100 }}>
-            <button onClick={() => multipleDelete()} style={{ width: 100 }}>Delete</button>
+          <th scope="col">Id</th>
+          <th scope="col">Name</th>
+          <th scope="col">Phone</th>
+          <th scope="col" className='ps-4'>Status</th>
+          <th scope="col" className='ps-5'>Action</th>
+          <th scope="col" style={{ width: 100 }}>
+            <button className='btn btn-light' onClick={() => multipleDelete()} style={{ width: 100 }}>Delete</button>
+          </th>
+          <th scope="col">
+            <button className='btn btn-light'>Edit Status</button>
           </th>
         </tr>
         </thead>
@@ -144,26 +164,29 @@ const CRUD = () => {
               const { id, name, phone, status } = value;
               return (
                 <tr key={i}>
-                  <td>{id}</td>
-                  <td>{name}</td>
-                  <td>{phone}</td>
+                  <td scope='col' >{++i}</td>
+                  <td scope='col' >{name}</td>
+                  <td scope='col' >{phone}</td>
 
-                  <td>
+                  <td scope='col' >
                     {
                       status === "deactivate" ? (
-                        <button onClick={() => handleStatus(id, status)} style={{ color: 'white', backgroundColor: 'red', border: 0, padding: 4, cursor: 'pointer' }}>{status}</button>
+                        <button onClick={() => handleStatus(id, status)} className='btn btn-secondary' >{status}</button>
 
                       ) : (
-                        <button onClick={() => handleStatus(id, status)} style={{ color: 'white', backgroundColor: 'green', border: 0, padding: 4 }}>{status}</button>
+                        <button onClick={() => handleStatus(id, status)} className='btn btn-success'>{status}</button>
                       )
                     }</td>
-                  <td>
-                    <button onClick={() => deleteUser(id)}>Delete</button>
-                    <button onClick={() => editUser(id)}>Edit</button>
+                  <td scope='col' className=''>
+                    <button className='btn btn-danger me-2' onClick={() => deleteUser(id)}>Delete</button>
+                    <button className='btn btn-primary' onClick={() => editUser(id)}>Edit</button>
                   </td>
 
-                  <td>
+                  <td scope='col' >
                     <input type="checkbox" onChange={(e) => changeDelete(id, e.target.checked)} style={{ width: 100 }} />
+                  </td>
+                  <td scope='col' className='ps-5'>
+                    <input type="checkbox" className='' onChange={(e) => handleChangeStatus(id, e.target.checked)} />
                   </td>
                 </tr>
               )
